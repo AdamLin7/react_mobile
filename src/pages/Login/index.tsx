@@ -4,6 +4,7 @@ export default function Login() {
   return (
     <div>Login
       <Button color='primary'>点击</Button>
+      <div className='demo'>测试</div>
     </div>
   )
 }

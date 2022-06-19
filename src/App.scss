@@ -1,6 +1,14 @@
+@import '@scss/hairline.scss';
 .app {
   height: 100%;
   span {
     background-color: pink;
   }
+}
+.demo {
+  width: 100px;
+  height: 100px;
+  padding: 20px;
+  position: relative;
+  @include hairline(bottom, #cd6799);
 }
