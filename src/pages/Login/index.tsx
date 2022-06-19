@@ -1,10 +1,10 @@
-import React from 'react'
 import {Button} from 'antd-mobile'
+import Icon from '@/components/Icon'
 export default function Login() {
   return (
-    <div>Login
+    <div>
       <Button color='primary'>点击</Button>
-      <div className='demo'>测试</div>
+     <Icon type='iconbtn_home_sel' onClick={() => {console.log('触发了！')}} className='my-icon'></Icon>
     </div>
   )
 }
