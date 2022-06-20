@@ -19,12 +19,14 @@ http.interceptors.request.use(config => {
 }, err => Promise.reject(err))
 
 // 响应拦截器
-http.interceptors.response.use(undefined, err => {
+http.interceptors.response.use(response => {
+    return response.data ? response.data : {}
+}, err => {
     if (err.response.status === 401) {
         Toast.show({
             content: '登录超时，请重新登录',
             duration: 1000,
-            afterClose:() => {
+            afterClose: () => {
                 // toast 关闭时会执行这个回调
                 customHistory.push('/login')
             }
