@@ -8,7 +8,6 @@ const setToken = (token: Token) => localStorage.setItem(GEEK_TOKEN_KEY, JSON.str
 // 清除 token
 const clearToken = () => localStorage.removeItem(GEEK_TOKEN_KEY)
 // 根据 token 判断是否登录
-const isAuth = () => { }
 export {
     getToken,
     setToken,

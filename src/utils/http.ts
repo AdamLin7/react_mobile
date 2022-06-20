@@ -31,8 +31,9 @@ http.interceptors.response.use(response => {
                 customHistory.push('/login')
             }
         })
-        return Promise.reject(err);
+
     }
+    return Promise.reject(err);
 })
 
 export { http }
