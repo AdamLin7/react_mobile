@@ -1,18 +1,19 @@
 import { Link, useHistory } from "react-router-dom"
-import { useEffect } from "react"
-import { useDispatch,useSelector } from "react-redux"
 import { getUser } from "@/store/action/profile"
-import type { RootState } from "@/types/store"
+import { useInitialState } from "@/utils/use-initial-state"
+import type {User} from '@/types/data'
 import Icon from "@/components/Icon"
 import styles from "./index.module.scss"
 
 export default function Profile() {
-  const dispatch = useDispatch()
-  const User = useSelector((state:RootState) => state.profile.user)
-  const { photo, name, like_count, follow_count, fans_count, art_count } = User;
-  useEffect(() => {
-    dispatch(getUser())
-  }, [])
+  // const dispatch = useDispatch()
+  // const User = useSelector((state:RootState) => state.profile.user)
+  // const { photo, name, like_count, follow_count, fans_count, art_count } = User;
+  // useEffect(() => {
+  //   dispatch(getUser())
+  // }, [])
+  // 自定义 hook 实现
+  const {user:User} = useInitialState(getUser, "profile")
   return (
     <div className={styles.root}>
       <div className="profile">
@@ -41,19 +42,19 @@ export default function Profile() {
         {/* 动态 - 对应的这一行 */}
         <div className="count-list">
           <div className="count-item">
-            <p>{art_count}</p>
+            <p>{User.art_count}</p>
             <p>动态</p>
           </div>
           <div className="count-item">
-            <p>{follow_count}</p>
+            <p>{ User.follow_count}</p>
             <p>关注</p>
           </div>
           <div className="count-item">
-            <p>{fans_count}</p>
+            <p>{User.fans_count }</p>
             <p>粉丝</p>
           </div>
           <div className="count-item">
-            <p>{like_count}</p>
+            <p>{ User.like_count}</p>
             <p>被赞</p>
           </div>
         </div>
