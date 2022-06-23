@@ -1,7 +1,6 @@
-import { Link, useHistory } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { getUser } from "@/store/action/profile"
 import { useInitialState } from "@/utils/use-initial-state"
-import type {User} from '@/types/data'
 import Icon from "@/components/Icon"
 import styles from "./index.module.scss"
 

@@ -1,11 +1,11 @@
 import type { User, UserProfile } from "@/types/data"
 import type { UserAction } from "@/types/store"
 type profileState = {
-  user: User  //个人详情
-  profile: UserProfile  //个人资料
+  user: User //个人详情
+  profile: UserProfile //个人资料
 }
 
-const initialState = { user: {},profile:{} } as profileState
+const initialState = { user: {}, profile: {} } as profileState
 
 const profile = (state = initialState, action: UserAction): profileState => {
   switch (action.type) {
@@ -17,7 +17,15 @@ const profile = (state = initialState, action: UserAction): profileState => {
     case "user/getprofile":
       return {
         ...state,
-        profile:action.payload
+        profile: action.payload,
+      }
+    case "profile/update":
+      return {
+        ...state,
+        profile: {
+          ...state.profile,
+          ...action.payload,
+        },
       }
     default:
       return state

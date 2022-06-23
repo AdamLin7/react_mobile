@@ -1,7 +1,7 @@
 import type { RootThunkAction } from "@/types/store";
 import { http } from '@/utils/http'
 import { LoginForm, LoginData } from '@/types/data'
-import { setToken } from "@/utils/auth";
+import { clearToken, setToken } from "@/utils/auth";
 // 异步请求的 action 
 export const login = (LoginParams: LoginForm): RootThunkAction => {
     return async dispatch => {
@@ -17,5 +17,12 @@ export const login = (LoginParams: LoginForm): RootThunkAction => {
 export const getCode = (mobile: string): RootThunkAction => {
     return () => {
         return http.get(`/sms/codes/${mobile}`)
+    }
+}
+
+export const logout = (): RootThunkAction => {
+    return async dispatch => {
+        await dispatch({ type: 'login/logout' })
+        clearToken()
     }
 }

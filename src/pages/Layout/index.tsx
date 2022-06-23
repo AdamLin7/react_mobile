@@ -3,6 +3,7 @@ import { TabBar } from "antd-mobile"
 import { useHistory, useLocation } from "react-router-dom"
 import styles from "./index.module.scss"
 import Icon from "@/components/Icon"
+import AuthRoute from "@/components/AuthRoute"
 
 // 导入页面组件，配置路由
 import Home from "../Home"
@@ -32,9 +33,15 @@ const Layout = () => {
 
       <Route path="/home/video" component={Video} />
 
-      <Route path="/home/profile" component={Profile} />
+      <AuthRoute path="/home/profile">
+        <Profile></Profile>
+      </AuthRoute>
 
-      <TabBar className="tab-bar" onChange={changeTab} activeKey={location.pathname}>
+      <TabBar
+        className="tab-bar"
+        onChange={changeTab}
+        activeKey={location.pathname}
+      >
         {tabs.map((item) => (
           <TabBar.Item
             key={item.path}

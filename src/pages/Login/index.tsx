@@ -2,7 +2,7 @@ import { Button, NavBar, Form, Input, Toast } from "antd-mobile"
 import { LoginForm } from "@/types/data"
 import { login, getCode } from "@/store/action/login"
 import { useDispatch } from "react-redux"
-import { useHistory } from "react-router-dom"
+import { useHistory, useLocation } from "react-router-dom"
 import { useRef, useState, useEffect } from "react"
 import { InputRef } from "antd-mobile/es/components/input"
 import type { AxiosError } from "axios"
@@ -10,6 +10,7 @@ import styles from "./index.module.scss"
 const Login = () => {
   const dispatch = useDispatch()
   const history = useHistory()
+  const location = useLocation<{ from: string } | undefined>()
   // 得到一个 Form 表单实例
   const [form] = Form.useForm()
   const mobileRef = useRef<InputRef>(null)
@@ -23,7 +24,10 @@ const Login = () => {
         content: "登录成功！",
         duration: 500,
         afterClose: () => {
-          history.replace("/home")
+          if (location.state?.from) {
+            return history.replace(location.state.from)
+          }
+          history.replace("/home/index")
         },
       })
     } catch (e) {
@@ -36,7 +40,7 @@ const Login = () => {
   }
   // 监听 timeleft
   useEffect(() => {
-    if (timeleft === 0) { 
+    if (timeleft === 0) {
       // 时间结束后，清除定时器
       window.clearInterval(timerRef.current)
     }
@@ -47,7 +51,7 @@ const Login = () => {
     return () => {
       clearInterval(timerRef.current)
     }
-  },[])
+  }, [])
   // 发送验证码
   const sendCode = async () => {
     const mobile = (form.getFieldValue("mobile") || "") as string

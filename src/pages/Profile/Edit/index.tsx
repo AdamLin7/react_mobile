@@ -1,22 +1,53 @@
-import { Button, List, DatePicker, NavBar } from "antd-mobile"
+import { Button, List, NavBar, Popup, Dialog, Toast } from "antd-mobile"
+import { useState } from "react"
 import classNames from "classnames"
 import { useHistory } from "react-router-dom"
+import { useDispatch } from "react-redux"
 import styles from "./index.module.scss"
 import { getUserPrifile } from "@/store/action/profile"
 import { useInitialState } from "@/utils/use-initial-state"
-import { UserProfile } from "@/types/data"
+import EditInput from "./components/EditInput"
+import { logout } from "@/store/action/login"
+
 const Item = List.Item
 
 const ProfileEdit = () => {
-  // const dispatch = useDispatch()
+  // 控制修改昵称组件的显示/隐藏
+  const [inputVisible, setInputVisible] = useState(false)
+  const dispatch = useDispatch()
   // useEffect(() => {
   //   dispatch(getUserPrifile())
   // }, [])
   // const userProfile = useSelector((state: RootState) => state.profile.profile)
   const history = useHistory()
   // 自定义 hook 实现
-  const { profile } = useInitialState(getUserPrifile, "profile") 
+  const { profile } = useInitialState(getUserPrifile, "profile")
+  const onInputHide = (bool: boolean) => {
+    setInputVisible(bool)
+  }
+  const onUpdateName = (value: string) => {
+    onInputHide(false)
+  }
 
+  // 退出登录
+  const onLogout = async () => {
+    const result = await Dialog.confirm({
+      content: "确认退出登录吗？",
+    })
+    if (result) {
+      dispatch(logout())
+      history.push("/login")
+      Toast.show({
+        content: "已退出登录",
+        duration: 1000,
+      })
+    } else {
+      Toast.show({
+        content: "已取消",
+        duration: 1000,
+      })
+    }
+  }
   return (
     <div className={styles.root}>
       <div className="content">
@@ -46,7 +77,13 @@ const ProfileEdit = () => {
             >
               头像
             </Item>
-            <Item arrow extra={profile.name}>
+            <Item
+              arrow
+              extra={profile.name}
+              onClick={() => {
+                onInputHide(true)
+              }}
+            >
               昵称
             </Item>
             <Item
@@ -69,20 +106,22 @@ const ProfileEdit = () => {
               生日
             </Item>
           </List>
-
-          <DatePicker
-            visible={false}
-            value={new Date()}
-            title="选择年月日"
-            min={new Date(1900, 0, 1, 0, 0, 0)}
-            max={new Date()}
-          />
         </div>
 
         <div className="logout">
-          <Button className="btn">退出登录</Button>
+          <Button className="btn" onClick={onLogout}>
+            退出登录
+          </Button>
         </div>
       </div>
+      {/* destroyOnClose 关闭组件时，销毁 */}
+      <Popup visible={inputVisible} position="right" destroyOnClose>
+        <EditInput
+          value={profile.name}
+          onClose={onInputHide}
+          onUpdateName={onUpdateName}
+        />
+      </Popup>
     </div>
   )
 }

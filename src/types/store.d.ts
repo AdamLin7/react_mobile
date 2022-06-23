@@ -12,6 +12,8 @@ export type RootAction = LoginAction | UserAction
 export type LoginAction = {
     type: 'login/token'  //字面量类型
     payload: Token
+} | {
+    type: 'login/logout',
 }
 
 export type UserAction = {
@@ -20,4 +22,7 @@ export type UserAction = {
 } | {
     type: 'user/getprofile',
     payload: UserProfile
+} | {
+    type: 'profile/update',
+    payload: Partial<UserProfile>
 }
