@@ -9,7 +9,7 @@ const useInitialState = <keyName extends keyof RootState>(action: () => void, st
 
     useEffect(() => {
         dispatch(action())
-    }, []);
+    }, [dispatch, action]);
 
     return state
 }

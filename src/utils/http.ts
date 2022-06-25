@@ -30,7 +30,6 @@ http.interceptors.response.use(response => {
             if (!refresh_token) {
                 return Promise.reject(err) //直接进入 catch
             }
-            console.log('401,我要去发请求更新token了');
             
             // 拿到新的 token
             const { data: { data: { token } } } = await axios({
