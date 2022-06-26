@@ -84,7 +84,10 @@ export type ArticleDetail = {
     is_followed: boolean,
     attitude: number,
     content: string,
-    is_collected: boolean
+    is_collected: boolean,
+    read_count: number,
+    like_count: number,
+    comm_count: number
 }
 
 export type ArticleDetailResponse = ApiResponse<ArticleDetail>
