@@ -5,27 +5,81 @@ import styles from "./index.module.scss"
 import Icon from "@/components/Icon"
 import CommentItem from "./components/CommentItem"
 import CommentFooter from "./components/CommentFooter"
-import { getArticleDetailAction } from "@/store/action/article"
+import {
+  getArticleDetailAction,
+  getArticleCommentAction,
+} from "@/store/action/article"
 import { useParams } from "react-router-dom"
+import { useEffect } from "react"
 import { useInitialState } from "@/utils/use-initial-state"
+// 高亮
+import highlight from "highlight.js"
+import "highlight.js/styles/dark.css"
+
+// 消毒富文本内容
+import domPurify from "dompurify"
+
+// 骨架屏
+import ContentLoader from "react-content-loader"
 
 // 格式化日期
 import dayjs from "dayjs"
 import localizedFormat from "dayjs/plugin/localizedFormat"
 dayjs.extend(localizedFormat)
 
+enum CommentType {
+  Article = "a",
+  comment = "c",
+}
 const Article = () => {
+  const { detail } = useInitialState(
+    () => getArticleDetailAction(artID),
+    "article"
+  )
+
+  const MyLoader = () => (
+    <ContentLoader
+      speed={2}
+      width={476}
+      height={124}
+      viewBox="0 0 476 124"
+      backgroundColor="#311985"
+      foregroundColor="#ecebeb"
+    >
+      <rect x="48" y="8" rx="3" ry="3" width="88" height="6" />
+      <rect x="48" y="26" rx="3" ry="3" width="52" height="6" />
+      <rect x="-168" y="56" rx="3" ry="3" width="410" height="6" />
+      <rect x="-142" y="71" rx="3" ry="3" width="380" height="6" />
+      <rect x="0" y="88" rx="3" ry="3" width="178" height="6" />
+      <circle cx="20" cy="20" r="20" />
+    </ContentLoader>
+  )
+
+  useEffect(() => {
+    const dghemlDOM = document.querySelector(".dg-html")
+    const codes = dghemlDOM?.querySelectorAll<HTMLElement>("pre code")
+    if (codes && codes.length > 0) {
+      codes.forEach((el) => {
+        highlight.highlightElement(el)
+        // 让每个 code 内容实现代码高亮
+      })
+      return
+    }
+    highlight.configure({
+      // 忽略警告
+      ignoreUnescapedHTML: true,
+    })
+  }, [detail])
   const history = useHistory()
-  const params = useParams<{ artID: string }>()
+  const { artID } = useParams<{ artID: string }>()
   const loadMoreComments = async () => {
     console.log("加载更多评论")
   }
-
-  const { detail } = useInitialState(
-    () => getArticleDetailAction(params.artID),
+  const { comment } = useInitialState(
+    () => getArticleCommentAction(CommentType.Article, artID, null, "replace"),
     "article"
   )
-  console.log(detail)
+  console.log("comment", comment)
   const renderArticle = () => {
     // 文章详情
     return (
@@ -55,7 +109,13 @@ const Article = () => {
           </div>
 
           <div className="content">
-            <div className="content-html dg-html" />
+            {/* 完成富文本内容的消毒 */}
+            <div
+              className="content-html dg-html"
+              dangerouslySetInnerHTML={{
+                __html: domPurify.sanitize(detail.content),
+              }}
+            />
             <div className="date">{dayjs(detail.pubdate).format("LL")}</div>
           </div>
         </div>
@@ -76,6 +136,9 @@ const Article = () => {
     )
   }
 
+  if (!detail.art_id) {
+    return MyLoader()
+  }
   return (
     <div className={styles.root}>
       <div className="root-wrapper">

@@ -1,7 +1,7 @@
 // 处理redux 相关类型
 import { ThunkAction } from 'redux-thunk';
 import store from '@/store'
-import { Token, User, UserProfile, channel, Articles, ArticleDetail } from './data'
+import { Token, User, UserProfile, channel, Articles, ArticleDetail, ArticleComment } from './data'
 // Redux 应用的状态
 export type RootState = ReturnType<typeof store.getState>      //通过 ReturnType 获取整个redux 的返回状态
 export type RootThunkAction = ThunkAction<void, RootState, unknown, RootAction>;
@@ -42,4 +42,7 @@ export type HomeAction = {
 export type ArticleAction = {
     type: 'article/get',
     payload: ArticleDetail
+} | {
+    type: 'article/getArticleComment',
+    payload: ArticleComment & { actionType: 'append' | 'replace' }
 }
